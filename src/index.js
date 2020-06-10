@@ -1,25 +1,20 @@
 import '@babel/polyfill'
 import express from 'express'
-import { config } from 'dotenv'
+import 'dotenv/config'
+import route from './network/router'
 
 const app = express()
-
-// Settings
-config() // Call config to dotenv
 
 // Middlewares
 app.use(express.json())
 app.use(express.urlencoded({extended: false }))
 
-// Routes
-import route from './router'
-route(app)
-
 // Static field
 
 // Server
 async function main() {
-    app.listen(process.env.PORT || process.env.PORT_SERVER)
+    app.listen(process.env.PORT || process.env.PORT_SERVER)    
+    route(app)
     console.log(`Server on port ${process.env.PORT_SERVER}`)
 }
 
