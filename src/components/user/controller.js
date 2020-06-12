@@ -1,23 +1,29 @@
 // Importing utils
-import { generateHash, generateSalt } from '../../utils/bcrypt'
+import { generateHash } from '../../utils/bcrypt'
 
 // Importing component
-import { get, read, create, getByParameter } from '../../database/firebase/store'
+import { get, read, create, getByParameter, remove, update } from '../../database/firebase/store'
 
 // GLOBAL VARIABLE
 const TABLE = 'users'
 
-export async  function readUser() {
-    const result = read(TABLE)
-    return result
+export const readUser = async () => {
+    const result = await read(TABLE)
+    if(result.length === 0) {
+        return { info: 'There are not registered users on the platform', status: 404 }
+    }
+    return { info: result, status: 200 }
 }
 
-export function getUser(id) {
-    const result = get(id.id, TABLE)
-    if(result === [] || result === undefined || result === null) {
-        return 'The id was not found in the database'
+export async function getUser(id) {
+    const result = await get(id.id, TABLE)
+    if(!result) {
+        return { info: 'User not found', status: 404 }
     }
-    return result
+    if(!result.data) {
+        return { info: 'User not found', status: 404 }
+    }
+    return { info: result, status: 200 }
 }
 
 export async function createUser(user) {
@@ -25,6 +31,7 @@ export async function createUser(user) {
     if(!user.email || !user.password || !user.username) {
         return { info: 'The email, password and username field needed to create the user were not found', status: 422 }
     }
+
     // Validate if the email input is not registered
     const emailExist = await getByParameter(TABLE, user.email, 'email')
     if(emailExist) {
@@ -45,4 +52,36 @@ export async function createUser(user) {
 
     const result = await create('users', newUser)
     return { info: result, status: 201 } 
+}
+
+export async function deleteUser(id) {
+    const result = await remove(id.id, TABLE)
+    if(!result) {
+        return { info: 'User not found', status: 404 }
+    }
+    return { info: 'User deleted', status: 200 }
+}
+
+export async function updateUser(id, user) {
+    // Validate if the email input is not registered
+    if(user.email) {
+        const emailExist = await getByParameter(TABLE, user.email, 'email')
+        if(emailExist) {
+            return { info: `The email ${user.email} is already registred. Please, try again with another mail`, status: 428 } 
+        }
+    }
+    
+    // Hashing password
+    if(user.password) {
+        const hashPassword = await generateHash(user.password)
+        user.password = hashPassword
+    }
+
+    // Update user
+    if(user) {
+        const newUser = {updatedAt: Date.now(), ...user}
+        const result = await update(id.id, TABLE, newUser)
+        return { info: 'user updated', status: 200 }
+    }
+    return { info: 'No data to update', status: 422 }
 }

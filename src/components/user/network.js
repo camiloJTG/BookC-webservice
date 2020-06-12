@@ -1,24 +1,34 @@
 import express from 'express'
 import { success, error } from '../../network/response'
-import { readUser, getUser, createUser } from './controller'
+import { readUser, getUser, createUser, deleteUser, updateUser } from './controller'
 
 const router = express.Router()
 
+// GET USER
 router.get('/', async (req, res) => {
-    const result = await readUser()
     try {
-        success(req, res, result, 200)
+        const result = await readUser()
+        if(result.status === 200) {
+            return success(req, res, result.info, result.status)
+        }
+        return error(req, res, result.info, result.status)
     } catch (e) {
-        error(req, res, result, 400)
+        console.error(`[GET USER] - Internal Server Error. Info: ${e.message}`)
+        return error(req, res, null, 400)
     }
 })
 
+// GET:ID USER
 router.get('/:id', async (req, res) => {
-    const result = await getUser(req.params)
     try {
-        success(req, res, result, 201)
+        const result = await getUser(req.params)
+        if(result.status === 200) {
+            return success(req, res, result.info, result.status)
+        }
+        return error(req, res, result.info, result.status)
     } catch (e) {
-        error(req, res, result, 400)
+        console.error(`[GET:ID USER] - Internal Server Error. Info: ${e.message}`)
+        return error(req, res, null, 400)
     }
 })
 
@@ -32,8 +42,38 @@ router.post('/', async (req, res) => {
         return error(req, res, result.info, result.status)
     } catch (e) {
         console.error(`[POST USER] - Internal Server Error. INFO. ${e.message}`)
-        error(req, res, 400)
+        return error(req, res, null, 400)
     }
+})
+
+// DELETE USER
+router.delete('/:id', async (req, res) => {
+    try {
+        const result = await deleteUser(req.params)
+        if(result.status === 200) {
+            return success(req, res, result.info, result.status)
+        }
+        return error(req, res, result.info, result.status)
+    } catch (e) {
+        console.error(`[DELETE USER] - Internal Server Error. INFO. ${e.message}`)
+        return error(req, res, null, 400)
+    }
+})
+
+// PUT USER
+router.put('/:id', async (req, res) => {
+    const data = await updateUser(req.params, req.body)
+    return res.send(data)
+    /*try {
+        const result = await UpdateUser(req.params, req.body)
+        if(result.status === 200) {
+            return success(req, res, result.info, result.status)
+        }
+        return error(req, res, result.info, result.status)
+    } catch (e) {
+        console.error(`[PUT USER] - Internal Server Error. INFO. ${e.message}`)
+        return error(req, res, null, 400)
+    }*/
 })
 
 export default router
