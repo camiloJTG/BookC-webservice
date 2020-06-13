@@ -43,3 +43,12 @@ export const update = async (id, table, data) => {
     const result = await db.collection(table).doc(id).update(data)
     return result
 }
+
+export const getCredential = async (email, table) => {
+    const result = await db.collection(table).where('email', '==', email).get()
+    let user
+    result.forEach(docs => {
+        user = {id: docs.id, data: docs.data()}
+    })
+    return user
+}
