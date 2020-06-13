@@ -62,10 +62,8 @@ router.delete('/:id', async (req, res) => {
 
 // PUT USER
 router.put('/:id', async (req, res) => {
-    const data = await updateUser(req.params, req.body)
-    return res.send(data)
-    /*try {
-        const result = await UpdateUser(req.params, req.body)
+    try {
+        const result = await updateUser(req.params, req.body)
         if(result.status === 200) {
             return success(req, res, result.info, result.status)
         }
@@ -73,7 +71,7 @@ router.put('/:id', async (req, res) => {
     } catch (e) {
         console.error(`[PUT USER] - Internal Server Error. INFO. ${e.message}`)
         return error(req, res, null, 400)
-    }*/
+    }
 })
 
 export default router

@@ -15,7 +15,7 @@ export const readUser = async () => {
     return { info: result, status: 200 }
 }
 
-export async function getUser(id) {
+export const getUser =  async id => {
     const result = await get(id.id, TABLE)
     if(!result) {
         return { info: 'User not found', status: 404 }
@@ -26,7 +26,7 @@ export async function getUser(id) {
     return { info: result, status: 200 }
 }
 
-export async function createUser(user) {
+export const createUser = async user => {
     // Validate if user model is correct
     if(!user.email || !user.password || !user.username) {
         return { info: 'The email, password and username field needed to create the user were not found', status: 422 }
@@ -54,7 +54,7 @@ export async function createUser(user) {
     return { info: result, status: 201 } 
 }
 
-export async function deleteUser(id) {
+export const deleteUser = async id => {
     const result = await remove(id.id, TABLE)
     if(!result) {
         return { info: 'User not found', status: 404 }
@@ -62,7 +62,7 @@ export async function deleteUser(id) {
     return { info: 'User deleted', status: 200 }
 }
 
-export async function updateUser(id, user) {
+export const updateUser = async (id, user) => {
     // Validate if the email input is not registered
     if(user.email) {
         const emailExist = await getByParameter(TABLE, user.email, 'email')

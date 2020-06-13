@@ -1,6 +1,6 @@
 import db from './connection'
 
-export async function read(table) {
+export const read = async table => {
     const result = await db.collection(table).get()
     let collectionUser = []
     result.forEach(docs => {
@@ -10,13 +10,13 @@ export async function read(table) {
     return collectionUser
 }
 
-export async function get(id, table) {
+export const get = async (id, table) => {
     const result = await db.collection(table).doc(id).get()
     let user = {id: result.id, data: result.data()}
     return user
 }
 
-export async function getByParameter(table, mail, field) {
+export const getByParameter = async (table, mail, field) => {
     const result = await db.collection(table).where(field, '==', mail).get()
     let collectionUser = []
     result.forEach(docs => {
@@ -28,18 +28,18 @@ export async function getByParameter(table, mail, field) {
     return false
 }
 
-export async function create(table, data) {
+export const create = async (table, data) => {
     const result = await db.collection(table).add(data)
     const dataResponse = await result.get()
     return { id: dataResponse.id, data: dataResponse.data() }
 }
 
-export async function remove(id, table) {
+export const remove = async (id, table) => {
     const result = await db.collection(table).doc(id).delete()
     return result
 }
 
-export async function update(id, table, data) {
+export const update = async (id, table, data) => {
     const result = await db.collection(table).doc(id).update(data)
     return result
 }

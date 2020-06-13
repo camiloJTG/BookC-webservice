@@ -12,7 +12,7 @@ app.use(express.urlencoded({extended: false }))
 // Static field
 
 // Server
-async function main() {
+const main = () => {
     app.listen(process.env.PORT || process.env.PORT_SERVER)    
     route(app)
     console.log(`Server on port ${process.env.PORT_SERVER}`)
