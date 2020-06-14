@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index --exec babel-node",
+    "test": "nodemon src/index --exec babel-node",
     "build": "babel src --out-dir dist",
     "start": "node dist/index.js"
   },
@@ -17,7 +18,9 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "firebase-admin": "^8.12.1",
+    "fs-extra": "^9.0.1",
     "jsonwebtoken": "^8.5.1",
+    "multer": "^1.4.2",
     "uuid": "^8.1.0"
   },
   "devDependencies": {
