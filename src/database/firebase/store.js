@@ -1,11 +1,11 @@
-import db from './connection'
+import { db } from './connection'
 
 export const read = async table => {
     const result = await db.collection(table).get()
-    let collectionUser = []
+    let collectionData = []
     result.forEach(docs => {
-        let users = {id: docs.id, data: docs.data()}
-        collectionUser.push(users)
+        let data = {id: docs.id, data: docs.data()}
+        collectionData.push(data)
     })
     return collectionUser
 }
@@ -16,16 +16,14 @@ export const get = async (id, table) => {
     return user
 }
 
-export const getByParameter = async (table, mail, field) => {
-    const result = await db.collection(table).where(field, '==', mail).get()
-    let collectionUser = []
+export const getByParameter = async (table, value, field) => {
+    const result = await db.collection(table).where(field, '==', value).get()
+    let collectionData = []
     result.forEach(docs => {
-        collectionUser.push(docs.data())
+        let data = {id: docs.id, data: docs.data()}
+        collectionData.push(data)
     })
-    if(collectionUser.length !== 0) {
-        return true
-    }
-    return false
+    return collectionData
 }
 
 export const create = async (table, data) => {

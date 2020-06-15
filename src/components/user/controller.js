@@ -34,7 +34,7 @@ export const createUser = async user => {
 
     // Validate if the email input is not registered
     const emailExist = await getByParameter(TABLE, user.email, 'email')
-    if(emailExist) {
+    if(emailExist.length !== 0) {
         return { info: `The email ${user.email} is already registred. Please, try again with another mail`, status: 428 } 
     }
 
@@ -66,7 +66,7 @@ export const updateUser = async (id, user) => {
     // Validate if the email input is not registered
     if(user.email) {
         const emailExist = await getByParameter(TABLE, user.email, 'email')
-        if(emailExist) {
+        if(emailExist.length !== 0) {
             return { info: `The email ${user.email} is already registred. Please, try again with another mail`, status: 428 } 
         }
     }
