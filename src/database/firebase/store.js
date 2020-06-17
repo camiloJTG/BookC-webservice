@@ -7,7 +7,7 @@ export const read = async table => {
         let data = {id: docs.id, data: docs.data()}
         collectionData.push(data)
     })
-    return collectionUser
+    return collectionData
 }
 
 export const get = async (id, table) => {

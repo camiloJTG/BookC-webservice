@@ -1,4 +1,4 @@
-import { read, get, getByParameter, create } from '../../database/firebase/store'
+import { read, get, getByParameter, create, remove, update } from '../../database/firebase/store'
 import { uploadFile, deleteFile } from '../../utils/cloudinary'
 import { unlink } from 'fs-extra'
 
@@ -63,5 +63,52 @@ export const createBook = async (book, img) => {
 
     // Saved Book
     const result = await create(TABLE, newBook)
-    return { info: result, status: 200 }
+    return { info: result, status: 201 }
+}
+
+export const deleteBook = async id => {
+    const exist = await get(id.id, TABLE)
+    if(!exist.data) {
+        return { info: 'Book not found', status: 404}
+    }
+    const result = await remove(id.id, TABLE)
+    if(result) { 
+        await unlink(exist.data.localPathimg)   
+        await deleteFile(exist.data.remotePublicId)
+        return { info: 'User deleted', status: 200 }
+    }
+    return { info: 'User not found', status: 404 }
+}
+
+export const updateBook = async (id, book, img) => {
+    let newBook = {}
+    const bookExist = await get(id.id, TABLE)
+    if(!bookExist.data) {
+        await unlink(img.path)
+        return { info: 'The book id was not found in the database', status: 404 }
+    }
+    const oldLocalImg = bookExist.data.localPathimg
+
+    // Validate if contain images
+    if(img.path) {
+        // Delete old image
+        await unlink(bookExist.data.localPathimg)
+        const uploadImg = await uploadFile(img.path)
+        newBook = { remotePublicId: uploadImg.public_id, localPathimg: img.path }
+    }
+
+    // Creating book object
+    newBook = {
+        book
+    }
+    const result = await update(id.id, TABLE, newBook)
+
+    if(!result) {
+        await deleteFile(newBook.remotePublicId)
+        await unlink(bookExist.data.localPathimg)
+        return { info: 'No data to update', status: 422 }
+    }
+    
+    await deleteFile(oldLocalImg)
+    return { info: 'book update', status: 200 }
 }
