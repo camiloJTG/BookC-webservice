@@ -2,7 +2,7 @@ import { decode, verify } from '../utils/jwt'
 import { error } from '../network/response'
 
 export const checkAuth = (req, res, next) => {
-    const token = req.headers['x-access-token']
+    const token = req.headers['x-access-token'] || ''
     
     const decodedToken = decode(token)
     if(!decodedToken) {
@@ -13,6 +13,5 @@ export const checkAuth = (req, res, next) => {
     if(!verifyToken) {
         return error(req, res, 'Invalid Token', 401 )
     }
-
     next()
 }
