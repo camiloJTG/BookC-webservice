@@ -1,11 +1,12 @@
 import express from 'express'
 import { success, error } from '../../network/response'
+import { checkAuth } from '../../middleware/authorization'
 import { readUser, getUser, createUser, deleteUser, updateUser } from './controller'
 
 const router = express.Router()
 
 // GET USER
-router.get('/', async (req, res) => {
+router.get('/', checkAuth, async (req, res) => {
     try {
         const result = await readUser()
         if(result.status === 200) {
@@ -19,7 +20,7 @@ router.get('/', async (req, res) => {
 })
 
 // GET:ID USER
-router.get('/:id', async (req, res) => {
+router.get('/:id', checkAuth, async (req, res) => {
     try {
         const result = await getUser(req.params)
         if(result.status === 200) {
@@ -47,7 +48,7 @@ router.post('/', async (req, res) => {
 })
 
 // DELETE USER
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', checkAuth, async (req, res) => {
     try {
         const result = await deleteUser(req.params)
         if(result.status === 200) {
@@ -61,7 +62,7 @@ router.delete('/:id', async (req, res) => {
 })
 
 // PUT USER
-router.put('/:id', async (req, res) => {
+router.put('/:id', checkAuth, async (req, res) => {
     try {
         const result = await updateUser(req.params, req.body)
         if(result.status === 200) {

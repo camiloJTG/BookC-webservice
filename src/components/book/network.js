@@ -1,11 +1,12 @@
 import express from 'express'
+import { checkAuth } from '../../middleware/authorization'
 import { createBook, readBook, getByIdBook, getByUserId, deleteBook, updateBook } from './controller'
 import { error, success } from '../../network/response'
 
 const route = express.Router()
 
 // GET BOOK
-route.get('/', async (req, res) => {
+route.get('/', checkAuth, async (req, res) => {
     try {
         const result = await readBook()
         if(result.status === 200) {
@@ -19,7 +20,7 @@ route.get('/', async (req, res) => {
 })
 
 // GET:ID BOOK
-route.get('/:id', async (req, res) => {
+route.get('/:id', checkAuth, async (req, res) => {
     try {
         const result = await getByIdBook(req.params)
         if(result.status === 200) {
@@ -33,7 +34,7 @@ route.get('/:id', async (req, res) => {
 })
 
 // GET:ID USER
-route.get('/user/:id', async (req, res) => {
+route.get('/user/:id', checkAuth, async (req, res) => {
     try {
         const result = await getByUserId(req.params)
         if(result === 200) {
@@ -47,7 +48,7 @@ route.get('/user/:id', async (req, res) => {
 })
 
 // POST BOOK
-route.post('/', async (req, res) => {
+route.post('/', checkAuth, async (req, res) => {
     try {
         const result = await createBook(req.body, req.file)
         if(result.status === 201) {
@@ -61,7 +62,7 @@ route.post('/', async (req, res) => {
 })
 
 // DELETE BOOK
-route.delete('/:id', async (req, res) => {
+route.delete('/:id', checkAuth, async (req, res) => {
     try {
         const result = await deleteBook(req.params)
         if(result.status === 200) {
@@ -75,7 +76,7 @@ route.delete('/:id', async (req, res) => {
 })
 
 // PUT BOOK
-route.put('/:id', async (req, res) => {
+route.put('/:id', checkAuth, async (req, res) => {
     try {
         const result = await updateBook(req.params, req.body, req.file)
         if(result.status === 200) {
