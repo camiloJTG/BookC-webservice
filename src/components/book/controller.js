@@ -32,7 +32,10 @@ export const getByUserId = async id => {
 }
 
 export const createBook = async (book, img) => {
-    if(!book.title || !book.author || !book.editorial || !book.numberPage || !book.synopsis || !book.rating || !book.startReading || !book.endReading || !img.path || !book.userId) {
+    if(!img) {
+        return { info: 'The data model is not correct. Please review the API documentation', status: 422 }
+    }
+    if(!book.title || !book.author || !book.editorial || !book.numberPage || !book.synopsis || !book.rating || !book.startReading || !book.endReading || !book.userId) {
         await unlink(img.path)
         return { info: 'The data model is not correct. Please review the API documentation', status: 422 }
     }
@@ -81,34 +84,43 @@ export const deleteBook = async id => {
 }
 
 export const updateBook = async (id, book, img) => {
-    let newBook = {}
-    const bookExist = await get(id.id, TABLE)
-    if(!bookExist.data) {
-        await unlink(img.path)
+    // Validate if id exists
+    if(!id.id) {
+        if(img) {
+            await unlink(img.path)
+        }
         return { info: 'The book id was not found in the database', status: 404 }
     }
-    const oldLocalImg = bookExist.data.localPathimg
 
-    // Validate if contain images
-    if(img.path) {
-        // Delete old image
-        await unlink(bookExist.data.localPathimg)
-        const uploadImg = await uploadFile(img.path)
-        newBook = { remotePublicId: uploadImg.public_id, localPathimg: img.path }
-    }
-
-    // Creating book object
-    newBook = {
-        book
-    }
-    const result = await update(id.id, TABLE, newBook)
-
-    if(!result) {
-        await deleteFile(newBook.remotePublicId)
-        await unlink(bookExist.data.localPathimg)
-        return { info: 'No data to update', status: 422 }
+    // Get the current book data
+    const currentBook = await get(id.id, TABLE)
+    if(!currentBook.data) {
+        if(img) {
+            await unlink(img.path)
+        }
+        return { info: 'The book you want to update is not in the database', status: 404 }
     }
     
-    await deleteFile(oldLocalImg)
-    return { info: 'book update', status: 200 }
+    // Update field 
+    if(book.title || book.author || book.editorial || book.numberPage || book.synopsis || book.rating || book.startReading || book.endReading || book.userId) {
+        book = {...book, updatedAt: Date.now()}
+    }
+
+    // Update images
+    if(img) {        
+        // Delete old image
+        await deleteFile(currentBook.data.remotePublicId)
+        await unlink(currentBook.data.localPathimg)
+    
+        // Upload new image
+        const uploadNewImage = await uploadFile(img.path)
+        book = { ...book, remotePublicId: uploadNewImage.public_id, localPathimg: img.path, image: uploadNewImage.secure_url }
+    }
+
+    // Saved updated Book
+    const updateBook = await update(id.id, TABLE, book)
+    if(updateBook) {
+        return { info: 'Book Updated', status: 200 }
+    }
+    return { info: 'Not data book', status: 422 }
 }
