@@ -1,10 +1,6 @@
-// Importing utils
 import { generateHash } from '../../utils/bcrypt'
-
-// Importing component
 import { get, read, create, getByParameter, remove, update } from '../../database/firebase/store'
 
-// GLOBAL VARIABLE
 const TABLE = 'users'
 
 export const readUser = async () => {
@@ -63,6 +59,17 @@ export const deleteUser = async id => {
 }
 
 export const updateUser = async (id, user) => {
+    // Validate if id exists
+    if(!id.id) {
+        return { info: 'The user id was not found in the database', status: 404 }
+    }
+
+    // Get the current user
+    const currentUser = await get(id.id, TABLE)
+    if(!currentUser.data) {
+        return { info: 'The user you want to update is not in the database', status: 404 }
+    }
+
     // Validate if the email input is not registered
     if(user.email) {
         const emailExist = await getByParameter(TABLE, user.email, 'email')
@@ -70,7 +77,14 @@ export const updateUser = async (id, user) => {
             return { info: `The email ${user.email} is already registred. Please, try again with another mail`, status: 428 } 
         }
     }
-    
+
+    // Validate if the email input is not registered
+    if(user.username) {
+        const usernameExist = await getByParameter(TABLE, user.username, 'username')
+        if(usernameExist.length !== 0) {
+            return { info: `The username ${user.username} is already registered. Please, try again with another username`, status: 428 }
+        }
+    }
     // Hashing password
     if(user.password) {
         const hashPassword = await generateHash(user.password)
@@ -78,9 +92,9 @@ export const updateUser = async (id, user) => {
     }
 
     // Update user
-    if(user) {
-        const newUser = {updatedAt: Date.now(), ...user}
-        const result = await update(id.id, TABLE, newUser)
+    if(user.username || user.email || user.password) {
+        user = { ...user, updatedAt: Date.now() }
+        await update(id.id, TABLE, user)
         return { info: 'user updated', status: 200 }
     }
     return { info: 'No data to update', status: 422 }

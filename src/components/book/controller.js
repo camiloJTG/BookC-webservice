@@ -100,11 +100,6 @@ export const updateBook = async (id, book, img) => {
         }
         return { info: 'The book you want to update is not in the database', status: 404 }
     }
-    
-    // Update field 
-    if(book.title || book.author || book.editorial || book.numberPage || book.synopsis || book.rating || book.startReading || book.endReading || book.userId) {
-        book = {...book, updatedAt: Date.now()}
-    }
 
     // Update images
     if(img) {        
@@ -116,10 +111,11 @@ export const updateBook = async (id, book, img) => {
         const uploadNewImage = await uploadFile(img.path)
         book = { ...book, remotePublicId: uploadNewImage.public_id, localPathimg: img.path, image: uploadNewImage.secure_url }
     }
-
-    // Saved updated Book
-    const updateBook = await update(id.id, TABLE, book)
-    if(updateBook) {
+    
+    // Update field 
+    if(book.title || book.author || book.editorial || book.numberPage || book.synopsis || book.rating || book.startReading || book.endReading || book.userId || img) {
+        book = {...book, updatedAt: Date.now()}
+        await update(id.id, TABLE, book)
         return { info: 'Book Updated', status: 200 }
     }
     return { info: 'Not data book', status: 422 }
