@@ -16,8 +16,6 @@ router.post('/', async (req, res) => {
         console.log(`[POST AUTH] - Internal Server Error. Info: ${e.message}`)
         return error(req, res, null, 400)
     }
-    const result = await logIn(req.body)
-    res.send(result)
 })
 
 export default router
