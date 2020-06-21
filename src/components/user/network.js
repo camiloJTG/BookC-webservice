@@ -34,7 +34,7 @@ router.get('/:id', checkAuth, async (req, res) => {
 })
 
 // POST USER
-router.post('/', checkAuth, async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const result = await createUser(req.body)
         if(result.status === 201) {
