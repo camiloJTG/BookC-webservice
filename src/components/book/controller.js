@@ -35,7 +35,7 @@ export const createBook = async (book, img) => {
     if(!img) {
         return { info: 'The data model is not correct. Please review the API documentation', status: 422 }
     }
-    if(!book.title || !book.author || !book.editorial || !book.numberPage || !book.synopsis || !book.rating || !book.startReadimg || !book.endReadimg || !book.userId) {
+    if(!book.title || !book.author || !book.editorial || !book.numberPage || !book.synopsis || !book.rating || !book.startReading || !book.endReading || !book.userId) {
         await unlink(img.path)
         return { info: 'The data model is not correct. Please review the API documentation', status: 422 }
     }
@@ -59,7 +59,7 @@ export const createBook = async (book, img) => {
     const newBook = {
         ...book,
         remotePublicId: uploadImage.public_id,
-        localPathimg: img.path,
+        localPathImg: img.path,
         createdAt: Date.now(),
         updatedAt: Date.now()
     }
@@ -109,11 +109,11 @@ export const updateBook = async (id, book, img) => {
     
         // Upload new image
         const uploadNewImage = await uploadFile(img.path)
-        book = { ...book, remotePublicId: uploadNewImage.public_id, localPathimg: img.path, image: uploadNewImage.secure_url }
+        book = { ...book, remotePublicId: uploadNewImage.public_id, localPathImg: img.path, image: uploadNewImage.secure_url }
     }
     
     // Update field 
-    if(book.title || book.author || book.editorial || book.numberPage || book.synopsis || book.rating || book.startReadimg || book.endReadimg || book.userId || img) {
+    if(book.title || book.author || book.editorial || book.numberPage || book.synopsis || book.rating || book.startReading || book.endReading || book.userId || img) {
         book = {...book, updatedAt: Date.now()}
         await update(id.id, TABLE, book)
         return { info: 'Book Updated', status: 200 }
