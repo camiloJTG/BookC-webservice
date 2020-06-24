@@ -35,7 +35,7 @@ export const createBook = async (book, img) => {
     if(!img) {
         return { info: 'The data model is not correct. Please review the API documentation', status: 422 }
     }
-    if(!book.title || !book.author || !book.editorial || !book.numberPage || !book.synopsis || !book.rating || !book.startReading || !book.endReading || !book.userId) {
+    if(!book.title || !book.author || !book.editorial || !book.numberPage || !book.synopsis || !book.rating || !book.startReadimg || !book.endReadimg || !book.userId) {
         await unlink(img.path)
         return { info: 'The data model is not correct. Please review the API documentation', status: 422 }
     }
@@ -113,7 +113,7 @@ export const updateBook = async (id, book, img) => {
     }
     
     // Update field 
-    if(book.title || book.author || book.editorial || book.numberPage || book.synopsis || book.rating || book.startReading || book.endReading || book.userId || img) {
+    if(book.title || book.author || book.editorial || book.numberPage || book.synopsis || book.rating || book.startReadimg || book.endReadimg || book.userId || img) {
         book = {...book, updatedAt: Date.now()}
         await update(id.id, TABLE, book)
         return { info: 'Book Updated', status: 200 }
