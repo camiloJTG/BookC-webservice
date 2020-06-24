@@ -1,7 +1,7 @@
 import { db } from './connection'
 
 export const read = async table => {
-    const result = await db.collection(table).get()
+    const result = await db.collection(table).orderBy('createdAt', 'desc').get()
     let collectionData = []
     result.forEach(docs => {
         let data = {id: docs.id, data: docs.data()}
