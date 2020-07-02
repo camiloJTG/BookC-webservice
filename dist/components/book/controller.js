@@ -307,13 +307,13 @@ var deleteBook = /*#__PURE__*/function () {
 
           case 13:
             return _context5.abrupt("return", {
-              info: 'User deleted',
+              info: 'Book deleted',
               status: 200
             });
 
           case 14:
             return _context5.abrupt("return", {
-              info: 'User not found',
+              info: 'Book not found',
               status: 404
             });
 
