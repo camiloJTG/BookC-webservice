@@ -1,23 +1,9 @@
 import express from 'express'
 import { success, error } from '../../network/response'
 import { checkAuth } from '../../middleware/authorization'
-import { readUser, getUser, createUser, deleteUser, updateUser } from './controller'
+import { getUser, createUser, deleteUser, updateUser } from './controller'
 
 const router = express.Router()
-
-// GET USER
-router.get('/', checkAuth, async (req, res) => {
-    try {
-        const result = await readUser()
-        if(result.status === 200) {
-            return success(req, res, result.info, result.status)
-        }
-        return error(req, res, result.info, result.status)
-    } catch (e) {
-        console.error(`[GET USER] - Internal Server Error. Info: ${e.message}`)
-        return error(req, res, null, 400)
-    }
-})
 
 // GET:ID USER
 router.get('/:id', checkAuth, async (req, res) => {

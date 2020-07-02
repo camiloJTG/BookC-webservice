@@ -1,15 +1,7 @@
 import { generateHash } from '../../utils/bcrypt'
-import { get, read, create, getByParameter, remove, update } from '../../database/firebase/store'
+import { get, create, getByParameter, remove, update } from '../../database/firebase/store'
 
 const TABLE = 'users'
-
-export const readUser = async () => {
-    const result = await read(TABLE)
-    if(result.length === 0) {
-        return { info: 'There are not registered users on the platform', status: 404 }
-    }
-    return { info: result, status: 200 }
-}
 
 export const getUser =  async id => {
     const result = await get(id.id, TABLE)
