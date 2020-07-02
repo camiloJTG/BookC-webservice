@@ -78,9 +78,9 @@ export const deleteBook = async id => {
     if(result) { 
         await unlink(exist.data.localPathimg)   
         await deleteFile(exist.data.remotePublicId)
-        return { info: 'User deleted', status: 200 }
+        return { info: 'Book deleted', status: 200 }
     }
-    return { info: 'User not found', status: 404 }
+    return { info: 'Book not found', status: 404 }
 }
 
 export const updateBook = async (id, book, img) => {
