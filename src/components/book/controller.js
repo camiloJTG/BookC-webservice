@@ -1,16 +1,8 @@
-import { read, get, getByParameter, create, remove, update } from '../../database/firebase/store'
+import { get, getByParameter, create, remove, update } from '../../database/firebase/store'
 import { uploadFile, deleteFile } from '../../utils/cloudinary'
 import { unlink } from 'fs-extra'
 
 const TABLE = 'books'
-
-export const readBook = async () => {
-    const result = await read(TABLE)
-    if(result.length === 0) {
-        return { info: 'There are not registered books on the platform', status: 404 }
-    }
-    return { info: result, status: 200 }
-}
 
 export const getByIdBook = async id => {
     const result = await get(id.id, TABLE)

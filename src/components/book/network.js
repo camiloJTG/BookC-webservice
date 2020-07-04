@@ -1,23 +1,9 @@
 import express from 'express'
 import { checkAuth } from '../../middleware/authorization'
-import { createBook, readBook, getByIdBook, getByUserId, deleteBook, updateBook } from './controller'
+import { createBook, getByIdBook, getByUserId, deleteBook, updateBook } from './controller'
 import { error, success } from '../../network/response'
 
 const route = express.Router()
-
-// GET BOOK
-route.get('/', checkAuth, async (req, res) => {
-    try {
-        const result = await readBook()
-        if(result.status === 200) {
-            return success(req, res, result.info, result.status)
-        }
-        return error(req, res, result.info, result.status)
-    } catch (e) {
-        console.log(`[GET BOOK] - Internal Server Error. Info. ${e.message}`)
-        return error(req, res, null, 400)
-    }
-})
 
 // GET:ID BOOK
 route.get('/:id', checkAuth, async (req, res) => {
