@@ -19,3 +19,27 @@ Babel technology is implemented to use ES6 or higher syntax
 ```
 https://app.swaggerhub.com/apis-docs/camilo_JTG/BookC/1.0.0
 ```
+###### URL api server
+```
+https://bookc-webservice.herokuapp.com/
+```
+
+# How use ?
+1. If you don't have an account created in the app. You will have to create one by asking the api POST users.
+```
+{
+  "username": "string",
+  "email": "string",
+  "password": "string"
+}
+```
+
+2. Once you have an account, you must consult the POST AUTH endpoint so that the api responds with a token that will be used 
+to consult the other methods, always using the token provided.
+```
+{
+  "email": "string",
+  "password": "string"
+}
+```
+3. View the api documentation for more information
