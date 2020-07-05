@@ -43,3 +43,18 @@ to consult the other methods, always using the token provided.
 }
 ```
 3. View the api documentation for more information
+
+
+# Tools Implements
+```
+- bcrypt to encrypt password
+- cloudinary to store the images
+- cors to  providing a Connect/Express 
+- doenv to manage the environmental variables
+- express to make my job easier :D
+- firebase-admin to store the data (firestore module)
+- fs-extra to manage the local files
+- jsonwebtoken to generate token and apply security to my api
+- multer to upload file
+- uuid to generate id
+```
