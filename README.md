@@ -44,6 +44,11 @@ to consult the other methods, always using the token provided.
 ```
 3. View the api documentation for more information
 
+# Important !
+```
+If you try to run the web service locally, it probably won't work. This is because you don't have the environment variables data. If you want to test the API, I recommend you to use the URL where it is hosted.
+https://bookc-webservice.herokuapp.com/
+```
 
 # Tools Implements
 ```
