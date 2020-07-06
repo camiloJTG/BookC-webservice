@@ -22,7 +22,7 @@ export const logIn = async access => {
     if(!credentialValid) {
         return { info: 'Invalid credential', status: 401 }
     }
-    console.log(result.id)
+    
     // Generate token
     const token = sign({email: result.data.email, username: result.data.username, id: result.id})
     return { info: token, status: 200 }
